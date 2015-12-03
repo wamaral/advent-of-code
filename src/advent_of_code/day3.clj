@@ -10,6 +10,13 @@
         y (drop 2 pairs)]
     [(eval x) (eval y)]))
 
-(let [input (slurp "resources/day3.input")]
-  (println (str "Houses with at least one present: "
-                (count (distinct (reductions step [0 0] input))))))
+(defn with-robot [acc cmds]
+  [(step (first acc) (first cmds))
+   (step (last acc) (last cmds))])
+
+(let [input (slurp "resources/day3.input")
+      split-input (partition 2 input)
+      houses-santa (reductions step [0 0] input)
+      houses-robot (reductions with-robot [[0 0] [0 0]] split-input)]
+  (println (str "Houses with at least one present: " (count (distinct houses-santa))))
+  (println (str "Houses with robot: " (count (distinct (apply concat houses-robot))))))
