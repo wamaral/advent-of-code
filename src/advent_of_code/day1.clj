@@ -1,8 +1,10 @@
 (ns advent-of-code.day1)
 
-(defn count-char [char input]
-  (get (frequencies input) char))
+(defn step [acc x]
+  (let [op (if (= \( x) inc dec)]
+    (eval (op acc))))
 
 (let [input (slurp "resources/day1.input")]
-  (println (- (count-char \( input)
-              (count-char \) input))))
+  (println (str "Final floor: " (reduce step 0 input)))
+  (println (str "Steps to basement: " (count (take-while #(>= % 0)
+                                                         (reductions step 0 input))))))
