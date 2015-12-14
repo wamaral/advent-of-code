@@ -18,8 +18,9 @@
         wrap (reduce + (map #(* 2 %) mins))]
     (+ acc bow wrap)))
 
-(with-open [rdr (clojure.java.io/reader "resources/day2.input")]
-  (println (str "Total paper: " (reduce sum-area 0 (line-seq rdr)))))
+(defn day2 []
+  (with-open [rdr (clojure.java.io/reader "resources/day2.input")]
+    (println (str "Total paper: " (reduce sum-area 0 (line-seq rdr)))))
 
-(with-open [rdr (clojure.java.io/reader "resources/day2.input")]
-  (println (str "Total ribbon: " (reduce ribbon 0 (line-seq rdr)))))
+  (with-open [rdr (clojure.java.io/reader "resources/day2.input")]
+    (println (str "Total ribbon: " (reduce ribbon 0 (line-seq rdr))))))

@@ -14,5 +14,6 @@
   (inc (count (take-while (complement (partial n-zeroes? n))
                           (hashes input)))))
 
-(let [input "yzbqklnj"]
-  (pmap (partial result input) [5 6]))
+(defn day4 []
+  (let [input "yzbqklnj"]
+    (pmap (partial result input) [5 6])))
