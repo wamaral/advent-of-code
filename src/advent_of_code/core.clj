@@ -5,7 +5,7 @@
             [advent-of-code.day3]
             [advent-of-code.day4]
             [advent-of-code.day5]
-            #_[advent-of-code.day6]
+            [advent-of-code.day6]
             #_[advent-of-code.day7]
             #_[advent-of-code.day8]
             #_[advent-of-code.day9]
