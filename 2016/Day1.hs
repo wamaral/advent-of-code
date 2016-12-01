@@ -1,16 +1,18 @@
 module Day1 where
 
-import Data.List (uncons, intersperse)
+import Data.List (uncons)
 import Data.List.Split (splitOneOf)
 import Data.Maybe (mapMaybe)
 
 -- Types
-data Orientation = N | E | S | W deriving (Show, Eq)
+data Orientation = N | E | S | W deriving (Show, Eq, Ord)
 data Movement = R Integer | L Integer deriving Show
 data Position = Position { x :: Integer
                          , y :: Integer
                          , orientation :: Orientation
-                         } deriving Show
+                         } deriving (Show, Ord)
+instance Eq Position where
+  (==) p1 p2 = (x p1) == (x p2) && (y p1) == (y p2)
 
 -- Type functions
 initPos :: Position
@@ -34,11 +36,18 @@ turn current mov = current { orientation = spinAround (orientation current) mov}
 
 walk :: Position -> Movement -> Position
 walk current mov = case (orientation current) of
-  N -> current { x = (x current) + dist}
-  S -> current { x = (x current) - dist}
-  E -> current { y = (y current) + dist}
-  W -> current { y = (y current) - dist}
+  N -> current { y = (y current) + dist}
+  S -> current { y = (y current) - dist}
+  E -> current { x = (x current) + dist}
+  W -> current { x = (x current) - dist}
   where dist = walkDistance mov
+
+distance :: Position -> Integer
+distance pos = abs (x pos) + abs (y pos)
+
+repeated :: [Position] -> [Position]
+repeated [] = []
+repeated (x:xs) = if x `elem` xs then x:(repeated xs) else (repeated xs)
 
 -- Parse
 moveMaker :: (Char, String) -> Movement
@@ -58,6 +67,6 @@ main = do
   let path = scanl go initPos steps
   let final = last path
   putStr "1. "
-  putStrLn $ show $ abs (x final) + abs (y final)
+  putStrLn $ show $ distance final
   putStr "2. "
-  putStrLn "TODO"
+  putStrLn $ show $ distance $ head $ repeated path
