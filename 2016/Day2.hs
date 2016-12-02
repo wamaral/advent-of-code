@@ -5,15 +5,22 @@ data Action = U | D | L | R
   deriving (Show)
 
 -- Logic
-move :: Integer -> Action -> Integer
-move current act = case act of
+move1 :: Integer -> Action -> Integer
+move1 current act = case act of
   U -> if current > 3 then current - 3 else current
   D -> if current < 7 then current + 3 else current
   L -> if current `elem` [1, 4, 7] then current else current - 1
   R -> if current `elem` [3, 6, 9] then current else current + 1
 
-findButton :: Integer -> [Action] -> Integer
-findButton = foldl move
+move2 :: Char -> Action -> Char
+move2 current act = case act of
+  U -> neighbour current "121452349678B"
+  D -> neighbour current "36785ABC9ADCD"
+  L -> neighbour current "122355678AABD"
+  R -> neighbour current "134467899BCCD"
+  where
+    base = "123456789ABCD"
+    neighbour i lst = snd $ head $ filter (\x -> i == fst x) $ zip base lst
 
 -- Parse
 parseAction :: Char -> Action
@@ -21,13 +28,14 @@ parseAction 'U' = U
 parseAction 'D' = D
 parseAction 'L' = L
 parseAction 'R' = R
+parseAction _   = error "Invalid input"
 
 -- Main
 main :: IO ()
 main = do
-  c <- readFile "input/2"
-  let inputs = foldl (\acc i -> acc ++ [findButton (last acc) (map parseAction i)]) [5] $ lines c
+  inputs <- readFile "input/2"
   putStr "1. "
-  putStrLn $ show $ tail inputs
+  putStrLn $ show $ tail $ getButtons move1 [5] (lines inputs)
   putStr "2. "
-  putStrLn "TODO"
+  putStrLn $ show $ tail $ getButtons move2 "5" (lines inputs)
+  where getButtons fn = foldl (\acc i -> acc ++ [foldl fn (last acc) (map parseAction i)])
