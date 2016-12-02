@@ -12,17 +12,26 @@ data Position = Position { x :: Integer
                          , orientation :: Orientation
                          } deriving (Show, Ord)
 instance Eq Position where
-  (==) p1 p2 = (x p1) == (x p2) && (y p1) == (y p2)
+  (==) p p' = (x p) == (x p') && (y p) == (y p')
 
 -- Type functions
 initPos :: Position
-initPos = Position { x = 0 , y = 0 , orientation = N }
+initPos = Position { x = 0, y = 0, orientation = N }
 
 walkDistance :: Movement -> Integer
 walkDistance (R a) = a
 walkDistance (L a) = a
 
 -- Walk
+
+walk :: [Position] -> Movement -> [Position]
+walk path mov = path ++ map (fn $ last path) [1..(walkDistance mov)]
+  where fn p = case orientation p of
+          N -> (\i -> p { y = (y p) + i })
+          S -> (\i -> p { y = (y p) - i })
+          E -> (\i -> p { x = (x p) + i })
+          W -> (\i -> p { x = (x p) - i })
+
 spinAround :: Orientation -> Movement -> Orientation
 spinAround current mov = head . tail $ dropWhile (/= current) (op orientations)
   where
@@ -31,16 +40,9 @@ spinAround current mov = head . tail $ dropWhile (/= current) (op orientations)
       R _ -> id
       L _ -> reverse
 
-turn :: Position -> Movement -> Position
-turn current mov = current { orientation = spinAround (orientation current) mov}
-
-walk :: Position -> Movement -> Position
-walk current mov = case (orientation current) of
-  N -> current { y = (y current) + dist}
-  S -> current { y = (y current) - dist}
-  E -> current { x = (x current) + dist}
-  W -> current { x = (x current) - dist}
-  where dist = walkDistance mov
+turn :: [Position] -> Movement -> [Position]
+turn path mov = (init path) ++ [updated]
+  where updated = (last path) { orientation = spinAround (orientation (last path)) mov}
 
 distance :: Position -> Integer
 distance pos = abs (x pos) + abs (y pos)
@@ -63,8 +65,8 @@ main :: IO ()
 main = do
   c <- readFile "input/1"
   let steps = map moveMaker $ mapMaybe uncons $ splitOneOf ", " c
-  let go = (\pos mov -> walk (turn pos mov) mov)
-  let path = scanl go initPos steps
+  let go = (\path mov -> walk (turn path mov) mov)
+  let path = foldl go [initPos] steps
   let final = last path
   putStr "1. "
   putStrLn $ show $ distance final
