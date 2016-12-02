@@ -1,14 +1,14 @@
 module Day1 where
 
-import Data.List (uncons)
-import Data.List.Split (splitOneOf)
-import Data.Maybe (mapMaybe)
+import           Data.List       (uncons)
+import           Data.List.Split (splitOneOf)
+import           Data.Maybe      (mapMaybe)
 
 -- Types
 data Orientation = N | E | S | W deriving (Show, Eq, Ord)
 data Movement = R Integer | L Integer deriving Show
-data Position = Position { x :: Integer
-                         , y :: Integer
+data Position = Position { x           :: Integer
+                         , y           :: Integer
                          , orientation :: Orientation
                          } deriving (Show, Ord)
 instance Eq Position where
@@ -23,7 +23,6 @@ walkDistance (R a) = a
 walkDistance (L a) = a
 
 -- Walk
-
 walk :: [Position] -> Movement -> [Position]
 walk path mov = path ++ map (fn $ last path) [1..(walkDistance mov)]
   where fn p = case orientation p of
@@ -42,13 +41,13 @@ spinAround current mov = head . tail $ dropWhile (/= current) (op orientations)
 
 turn :: [Position] -> Movement -> [Position]
 turn path mov = (init path) ++ [updated]
-  where updated = (last path) { orientation = spinAround (orientation (last path)) mov}
+  where updated = (last path) { orientation = spinAround (orientation (last path)) mov }
 
 distance :: Position -> Integer
 distance pos = abs (x pos) + abs (y pos)
 
 repeated :: [Position] -> [Position]
-repeated [] = []
+repeated []     = []
 repeated (x:xs) = if x `elem` xs then x:(repeated xs) else (repeated xs)
 
 -- Parse
@@ -56,7 +55,7 @@ moveMaker :: (Char, String) -> Movement
 moveMaker pair = case pair of
   ('R', xs) -> R (parse xs)
   ('L', xs) -> L (parse xs)
-  _ -> error "Invalid input"
+  _         -> error "Invalid input"
   where
     parse x = read x :: Integer
 
