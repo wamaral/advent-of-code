@@ -7,6 +7,8 @@ main :: IO ()
 main = do
   input <- readFile "input/6"
   putStr "1. "
-  putStrLn $ map (head . head . reverse . (sortOn length) . group . sort) $ transpose $ lines input
+  putStrLn $ map (mapfn reverse) $ transpose $ lines input
   putStr "2. "
-  putStrLn "TODO"
+  putStrLn $ map (mapfn id) $ transpose $ lines input
+  where
+    mapfn f = (head . head . f . (sortOn length) . group . sort)
