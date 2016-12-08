@@ -57,5 +57,5 @@ main = do
   let applied = foldl runOp display ops
   putStr "1. "
   putStrLn $ show $ length $ filter (== On) $ M.toList applied
-  putStr "2. "
-  putStrLn "TODO"
+  putStrLn "2. "
+  putStrLn $ show applied
