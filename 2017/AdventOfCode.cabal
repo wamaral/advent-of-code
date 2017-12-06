@@ -16,6 +16,7 @@ library
   ghc-options:         -Wall -Werror -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , bytestring
+                     , containers
                      , lens
                      , split
                      , wreq
