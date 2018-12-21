@@ -7,7 +7,7 @@ import           System.IO
 
 completeParts :: Map.Map Int [(String -> String)]
 completeParts = Map.fromList
-  [(1, [day1part1])]
+  [(1, [day1part1, day1part2])]
 
 main :: IO ()
 main = do
