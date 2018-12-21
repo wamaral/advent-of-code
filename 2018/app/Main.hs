@@ -5,7 +5,7 @@ import qualified Data.Map.Strict as Map
 import           Day1
 import           System.IO
 
-completeParts :: Map.Map Int [(String -> String)]
+completeParts :: Map.Map Int [String -> String]
 completeParts = Map.fromList
   [(1, [day1part1, day1part2])]
 
@@ -19,6 +19,6 @@ main = do
   chosenDay <- stringToInt <$> getLine
   input <- maybe (pure "" :: IO String) readInput chosenDay
 
-  case chosenDay >>= (flip Map.lookup) completeParts of
+  case chosenDay >>= flip Map.lookup completeParts of
     Nothing       -> putStrLn "Day not found"
-    Just dayParts -> mapM_ putStrLn $ map (\f -> f input) dayParts
+    Just dayParts -> mapM_ (putStrLn . (\f -> f input)) dayParts
