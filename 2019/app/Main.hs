@@ -3,11 +3,14 @@ module Main where
 import           Common
 import qualified Data.Map.Strict as Map
 import           Day1
+import           Day2
 import           System.IO
 
 completeParts :: Map.Map Int [String -> String]
 completeParts = Map.fromList
-  [(1, [day1part1, day1part2])]
+  [ (1, [day1part1, day1part2])
+  , (2, [day2part1, day2part2])
+  ]
 
 main :: IO ()
 main = do

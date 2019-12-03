@@ -31,6 +31,7 @@ library:
   - megaparsec
   - containers
   - lens
+  - split
 
 executables:
   aoc2019-exe:
