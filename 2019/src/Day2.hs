@@ -1,16 +1,16 @@
-{-# LANGUAGE FlexibleContexts #-}
-{-# LANGUAGE GADTs            #-}
-{-# LANGUAGE TypeFamilies     #-}
 module Day2
   (day2part1, day2part2)
   where
 
 import           Common
 import           Control.Lens
+import           Data.List
 import           Data.List.Split
 import           Data.Maybe
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
+
+-- Questionable code follows
 
 type Position = Int
 type Block = [Int]
@@ -54,9 +54,20 @@ result (Running _)  = 0
 day2part1 :: String -> String
 day2part1 input = do
   let program = updateValueInPosition 2 2 $ updateValueInPosition 1 12 $ readProgram input
-  let blocks = case program of
-        Running x -> x
-  show $ result $ foldl applyOperation program blocks
+  show $ result $ runProgram program
+  where
+    runProgram program@(Running blocks) = foldl applyOperation program blocks
+    runProgram program@(Finished _)     = program
 
 day2part2 :: String -> String
-day2part2 _ = ""
+day2part2 input = do
+  let baseProgram = readProgram input
+  let programs = [(x, y, updateValueInPosition 1 x $ updateValueInPosition 2 y baseProgram) | x <- [0..100], y <- [0..100]]
+  let evaluatedPrograms = map runProgram programs
+  let found = find (\(_, _, program) -> result program == 19690720) evaluatedPrograms
+  case found of
+    Nothing        -> "Error: no match found"
+    Just (x, y, _) -> show $ 100 * x + y
+  where
+    runProgram (x, y, program@(Running blocks)) = (x, y, foldl applyOperation program blocks)
+    runProgram (x, y, program@(Finished _))     = (x, y, program)
