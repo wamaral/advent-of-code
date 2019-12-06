@@ -24,3 +24,8 @@ spec = do
       day3part1 sample2 `shouldBe` "159"
     it "matches example 3" $ do
       day3part1 sample3 `shouldBe` "135"
+  describe "part 2" $ do
+    it "matches example 2" $ do
+      day3part2 sample2 `shouldBe` "610"
+    it "matches example 3" $ do
+      day3part2 sample3 `shouldBe` "410"
