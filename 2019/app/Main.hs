@@ -16,9 +16,7 @@ completeParts = Map.fromList
 
 main :: IO ()
 main = do
-  let dayCount = length completeParts
-
-  putStr $ "Choose day to run (1-" ++ show dayCount ++ "): "
+  putStr "Choose day to run: "
   hFlush stdout
 
   chosenDay <- stringToInt <$> getLine
