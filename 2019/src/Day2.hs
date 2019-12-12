@@ -26,6 +26,7 @@ positionInBlocks :: Position -> (Int, Int)
 positionInBlocks x = quotRem x 4
 
 getValueInPosition :: Position -> Program -> Int
+getValueInPosition _ (Finished _) = 0
 getValueInPosition x (Running program) = fromMaybe 0 $ program ^? ix a . ix b
   where (a, b) = positionInBlocks x
 
@@ -46,6 +47,8 @@ applyOperation p@(Running program) (a:b:c:d:_) = case a of
   1  -> updateValueInPosition d (add b c p) p
   2  -> updateValueInPosition d (multiply b c p) p
   99 -> Finished program
+  _  -> Running program -- noop
+applyOperation p@(Running _) _ = p
 
 result :: Program -> Int
 result (Finished p) = head . head $ p
