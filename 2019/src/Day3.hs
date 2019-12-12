@@ -3,6 +3,7 @@ module Day3
   where
 
 import           Common
+import           Data.Bifunctor
 import           Data.Maybe
 import qualified Data.Set             as S
 import           Text.Megaparsec
@@ -41,11 +42,18 @@ path :: [Movement] -> [Point]
 path = foldl moveFromLast [Point 0 0]
   where moveFromLast points movement = points ++ tail (move (last points) movement)
 
+paths :: String -> ([Point], [Point])
+paths input = (head ps, head $ tail ps)
+  where ps = map (tail . path . readMovements) $ lines input
+
 day3part1 :: String -> String
-day3part1 input = do
-  let wires = map readMovements $ lines input
-  let paths = map (S.fromList . tail . path) wires
-  show $ minimum $ S.map manhattanDistance $ S.intersection (head paths) (head $ tail paths)
+day3part1 input = show $ minimum $ S.map manhattanDistance $ S.intersection spath1 spath2
+  where (spath1, spath2) = bimap S.fromList S.fromList $ paths input
 
 day3part2 :: String -> String
-day3part2 _ = ""
+day3part2 input = show $ minimum lengths
+  where
+    (path1, path2) = paths input
+    intersections = S.toList $ S.intersection (S.fromList path1) (S.fromList path2)
+    lenPathUntil point path' = length (takeWhile (/= point) path') + 1 -- include end point
+    lengths = map (\i -> lenPathUntil i path1 + lenPathUntil i path2) intersections
