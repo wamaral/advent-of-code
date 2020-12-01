@@ -32,6 +32,7 @@ library:
   - containers
   - lens
   - split
+  - safe
 
 executables:
   aoc2020-exe:
