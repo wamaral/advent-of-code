@@ -3,22 +3,20 @@ module Day1
   where
 
 import           Common
+import           Control.Monad
 import           Data.Function
-import           Data.List
 import           Data.Maybe
 import           Safe
 
-allPairs :: [Int] -> [(Int, Int)]
-allPairs xs = nub [(x,y) | x <- xs, y <- xs, x /= y]
-
-day1part1 :: String -> String
-day1part1 input = readListOf intParser input
-  & allPairs
-  & filter (\(x,y) -> x + y == 2020)
-  & map (\(x,y) -> x * y)
+solveForLength :: Int -> [Int] -> Int
+solveForLength n xs = replicateM n xs
+  & filter (\xs' -> sum xs' == 2020)
+  & map product
   & headMay
   & fromMaybe 0
-  & show
+
+day1part1 :: String -> String
+day1part1 = show . solveForLength 2 . readListOf intParser
 
 day1part2 :: String -> String
-day1part2 _ = ""
+day1part2 = show . solveForLength 3 . readListOf intParser
