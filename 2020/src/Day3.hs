@@ -3,6 +3,7 @@ module Day3
   where
 
 import           Common
+import           Data.Function
 import           Data.Maybe
 import           Safe
 import           Text.Megaparsec
@@ -19,8 +20,20 @@ squareParser = choice
 squareAtPos :: Int -> [Square] -> Maybe Square
 squareAtPos n squares = atMay (cycle squares) n
 
+squaresBySlope :: Int -> Int -> [[Square]] -> [Square]
+squaresBySlope x y area = area
+  & iterate (drop y)
+  & takeWhile (not . null)
+  & map head
+  & tail -- We have the list of rows after skipping every Y
+  & zip [x, x*2..]
+  & mapMaybe (uncurry squareAtPos)
+
+treeCountBySlope :: Int -> Int -> [[Square]] -> Int
+treeCountBySlope x y area = squaresBySlope x y area & filter (== Tree) & length
+
 day3part1 :: String -> String
-day3part1 = show . length . filter (== Tree) . mapMaybe (uncurry squareAtPos) . zip [3,6..] . tail . readListOf (many squareParser)
+day3part1 = show . treeCountBySlope 3 1 . readListOf (many squareParser)
 
 day3part2 :: String -> String
 day3part2 _ = ""
