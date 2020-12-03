@@ -36,4 +36,8 @@ day3part1 :: String -> String
 day3part1 = show . treeCountBySlope 3 1 . readListOf (many squareParser)
 
 day3part2 :: String -> String
-day3part2 _ = ""
+day3part2 input = [(1,1), (3,1), (5,1), (7,1), (1,2)]
+  & map (\(x,y) -> treeCountBySlope x y area)
+  & product
+  & show
+  where area = readListOf (many squareParser) input
