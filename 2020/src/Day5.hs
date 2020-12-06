@@ -3,6 +3,9 @@ module Day5
   where
 
 import           Common
+import           Data.Function
+import           Data.List
+import           Safe
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
 
@@ -32,8 +35,15 @@ seatId coords = row * 8 + col
     row = search (rows coords) 0 127
     col = search (cols coords) 0 7
 
+emptySeat :: [Int] -> Int
+emptySeat seats = zip sortedSeats (map pred $ tail sortedSeats)
+  & filter (uncurry (/=))
+  & map snd
+  & headDef 0
+  where sortedSeats = sort seats
+
 day5part1 :: String -> String
 day5part1 = show . maximum . map seatId . readListOf seatCoordParser
 
 day5part2 :: String -> String
-day5part2 _ = ""
+day5part2 = show . emptySeat . map seatId . readListOf seatCoordParser
