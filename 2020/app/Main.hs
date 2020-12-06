@@ -6,6 +6,7 @@ import           Day1
 import           Day2
 import           Day3
 import           Day4
+import           Day5
 import           System.IO
 
 completeParts :: Map.Map Int [String -> String]
@@ -14,6 +15,7 @@ completeParts = Map.fromList
   , (2, [day2part1, day2part2])
   , (3, [day3part1, day3part2])
   , (4, [day4part1, day4part2])
+  , (5, [day5part1, day5part2])
   ]
 
 main :: IO ()
