@@ -11,8 +11,14 @@ type Parser = Parsec Void String
 intParser :: Parser Int
 intParser = stringToInt0 <$> some digitChar
 
+linesParser :: Parser a -> Parser [a]
+linesParser parser = someTill (parser <* optional newline) eof
+
 readListOf :: Parser a -> String -> [a]
-readListOf parser = fromMaybe [] . parseMaybe (someTill (parser <* optional newline) eof)
+readListOf parser = fromMaybe [] . parseMaybe (linesParser parser)
+
+readListOfDebug :: Show a => Parser a -> String -> String
+readListOfDebug parser = either errorBundlePretty show . parse (linesParser parser) "Debug"
 
 stringToInt :: String -> Maybe Int
 stringToInt s = read <$> parseMaybe parser s
