@@ -7,8 +7,11 @@ module Day7
 import           Common
 import           Data.List
 import qualified Data.Map             as M
+import           Data.Maybe
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
+
+type BagMap = M.Map String Bag
 
 data Bag = Bag
   { color    :: String
@@ -46,8 +49,18 @@ hasChildRec _ [] = []
 hasChildRec child bags = myParents ++ concatMap (\x -> hasChildRec (color x) bags) myParents
   where myParents = filter (hasChild child) bags
 
+getChildCountRec :: String -> BagMap -> Int
+getChildCountRec bagColor bagmap = succ $ sum $ map (\childName -> howManyOfChild childName * getChildCountRec childName bagmap) myChildrenNames
+  where
+    myself = fromMaybe Bag{color = bagColor, children = M.empty} $ M.lookup bagColor bagmap
+    myChildrenNames = M.keys $ children myself
+    howManyOfChild childName = fromMaybe 0 $ M.lookup childName (children myself)
+
+toBagMap :: [Bag] -> BagMap
+toBagMap bags = M.fromList $ map (\x -> (color x, x)) bags
+
 day7part1 :: String -> String
 day7part1 = show . length . nub . hasChildRec "shiny gold" . readListOf bagParser
 
 day7part2 :: String -> String
-day7part2 _ = ""
+day7part2 = show . pred . getChildCountRec "shiny gold" . toBagMap . readListOf bagParser
