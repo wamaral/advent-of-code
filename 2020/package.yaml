@@ -33,6 +33,7 @@ library:
   - lens
   - split
   - safe
+  - mtl
 
 executables:
   aoc2020-exe:

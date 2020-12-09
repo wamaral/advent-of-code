@@ -11,6 +11,12 @@ type Parser = Parsec Void String
 intParser :: Parser Int
 intParser = stringToInt0 <$> some digitChar
 
+signedIntParser :: Parser Int
+signedIntParser = do
+  sign <- optional $ char '-' <|> char '+'
+  int <- stringToInt0 <$> some digitChar
+  return $ if sign == Just '-' then negate int else int
+
 linesParser :: Parser a -> Parser [a]
 linesParser parser = someTill (parser <* optional newline) eof
 
