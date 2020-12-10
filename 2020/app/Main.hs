@@ -3,6 +3,7 @@ module Main where
 import           Common
 import qualified Data.Map.Strict as Map
 import           Day1
+import           Day10
 import           Day2
 import           Day3
 import           Day4
@@ -24,6 +25,7 @@ completeParts = Map.fromList
   , (7, [day7part1, day7part2])
   , (8, [day8part1, day8part2])
   , (9, [day9part1, day9part2])
+  , (10, [day10part1, day10part2])
   ]
 
 main :: IO ()
