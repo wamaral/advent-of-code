@@ -33,6 +33,9 @@ stringToInt s = read <$> parseMaybe parser s
 stringToInt0 :: String -> Int
 stringToInt0 = fromMaybe 0 . stringToInt
 
+zipTail :: [a] -> [(a,a)]
+zipTail xs = zip xs (tail xs)
+
 inputNotFound :: IOError -> IO String
 inputNotFound _ = pure ""
 
