@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 73c927c45c85de901dc9a71607b161adb97743c5309c0e1fbcca8618a2300b08
+-- hash: a026476d6ee60ca4b7f2fecdadbfd699a9c45ecf6f7c12e92e435c73c4ca4020
 
 name:           aoc2020
 version:        0.1.0.0
@@ -48,10 +48,12 @@ library
       base >=4.7 && <5
     , containers
     , lens
+    , linear
     , megaparsec
     , mtl
     , safe
     , split
+    , vector
   default-language: Haskell2010
 
 executable aoc2020-exe
