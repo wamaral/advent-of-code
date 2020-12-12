@@ -36,6 +36,10 @@ stringToInt0 = fromMaybe 0 . stringToInt
 zipTail :: [a] -> [(a,a)]
 zipTail xs = zip xs (tail xs)
 
+fixpoint :: Eq a => (a -> a) -> a -> a
+fixpoint f x = if x == x' then x else fixpoint f x'
+  where x' = f x
+
 inputNotFound :: IOError -> IO String
 inputNotFound _ = pure ""
 

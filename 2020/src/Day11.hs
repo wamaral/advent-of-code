@@ -58,9 +58,11 @@ changeGridKing = changeGrid kingAdjacents 4
 changeGridQueen :: Grid -> Grid
 changeGridQueen = changeGrid queenAdjacents 5
 
-fixpoint :: (Grid -> Grid) -> Grid -> Grid
-fixpoint f grid = if grid == newGrid then grid else fixpoint f newGrid
-  where newGrid = f grid
+-- First version, leaving this here as it's probably more descriptive
+-- But I couldn't resist making a generic version in Common.hs :)
+-- fixpoint :: (Grid -> Grid) -> Grid -> Grid
+-- fixpoint f grid = if grid == newGrid then grid else fixpoint f newGrid
+--   where newGrid = f grid
 
 day11part1 :: String -> String
 day11part1 = show . M.size . M.filter (== Occupied) . fixpoint changeGridKing . inputToGrid . readListOf (many seatParser)
