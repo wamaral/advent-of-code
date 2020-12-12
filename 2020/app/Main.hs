@@ -5,6 +5,7 @@ import qualified Data.Map.Strict as Map
 import           Day1
 import           Day10
 import           Day11
+import           Day12
 import           Day2
 import           Day3
 import           Day4
@@ -28,6 +29,7 @@ completeParts = Map.fromList
   , (9, [day9part1, day9part2])
   , (10, [day10part1, day10part2])
   , (11, [day11part1, day11part2])
+  , (12, [day12part1, day12part2])
   ]
 
 main :: IO ()
