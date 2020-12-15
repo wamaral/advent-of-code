@@ -60,3 +60,15 @@ tests:
     dependencies:
     - aoc2020
     - hspec
+
+benchmarks:
+  aoc2020-bench:
+    main:                Main.hs
+    source-dirs:         bench
+    ghc-options:
+    - -threaded
+    - -rtsopts
+    - -with-rtsopts=-N
+    dependencies:
+    - aoc2020
+    - criterion
