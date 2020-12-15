@@ -77,6 +77,7 @@ test-suite aoc2020-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
+      Day15Spec
       Paths_aoc2020
   hs-source-dirs:
       test
