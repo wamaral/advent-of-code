@@ -8,6 +8,7 @@ import           Day11
 import           Day12
 import           Day13
 import           Day14
+import           Day15
 import           Day2
 import           Day3
 import           Day4
@@ -34,6 +35,7 @@ completeParts = Map.fromList
   , (12, [day12part1, day12part2])
   , (13, [day13part1, day13part2])
   , (14, [day14part1, day14part2])
+  , (15, [day15part1, day15part2])
   ]
 
 main :: IO ()
