@@ -36,6 +36,7 @@ library:
   - mtl
   - vector
   - linear
+  - monad-loops
 
 executables:
   aoc2020-exe:
@@ -45,6 +46,7 @@ executables:
     - -threaded
     - -rtsopts
     - -with-rtsopts=-N
+    - -O2
     dependencies:
     - aoc2020
     - containers

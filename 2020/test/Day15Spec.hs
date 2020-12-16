@@ -18,7 +18,7 @@ spec = do
       day15part1 "3,1,2" `shouldBe` "1836"
   describe "part 2" $ do
     it "runs provided examples" $ do
-      day15part2 "0,3,6" `shouldBe` "436"
+      day15part2 "0,3,6" `shouldBe` "175594"
       day15part2 "1,3,2" `shouldBe` "2578"
       day15part2 "2,1,3" `shouldBe` "3544142"
       day15part2 "1,2,3" `shouldBe` "261214"

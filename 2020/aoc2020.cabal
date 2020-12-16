@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 7b50fd60b87a485322be059bf10fe915f360df96f80a80ee37cc85a0e6f0f838
+-- hash: 1462717e69bfa5a8347c470c9ca2bd6c8888ccd65f7db5d0e535255cd28a9668
 
 name:           aoc2020
 version:        0.1.0.0
@@ -54,6 +54,7 @@ library
     , lens
     , linear
     , megaparsec
+    , monad-loops
     , mtl
     , safe
     , split
@@ -66,7 +67,7 @@ executable aoc2020-exe
       Paths_aoc2020
   hs-source-dirs:
       app
-  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N
+  ghc-options: -Wall -threaded -rtsopts -with-rtsopts=-N -O2
   build-depends:
       aoc2020
     , base >=4.7 && <5
