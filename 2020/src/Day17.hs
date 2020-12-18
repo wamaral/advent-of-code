@@ -4,17 +4,16 @@ module Day17
 
 import           Common
 import           Data.Function
-import           Data.List
-import qualified Data.Map.Strict      as M
-import           Linear.V3
-import           Safe
+import qualified Data.Set             as S
+import           Linear.V4            hiding (point)
+import qualified Linear.Vector        as Vector
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
 
 data Cube = Active | Inactive deriving (Eq, Show)
 
-type Point = V3 Int
-type World = M.Map Point Cube
+type Point = V4 Int
+data World = World3d (S.Set Point) | World4d (S.Set Point)
 
 cubeParser :: Parser Cube
 cubeParser = choice
@@ -22,39 +21,62 @@ cubeParser = choice
   , Inactive <$ char '.'
   ]
 
-emptyWorld :: Int -> Int -> Int -> World
-emptyWorld x y z = foldl' (\m' p -> M.insert p Inactive m') M.empty [V3 x' y' z' | x' <- [-x..x], y' <- [-y..y], z' <- [-z..z]]
+inputToPoints :: [[Cube]] -> S.Set Point
+inputToPoints cubes = cubes
+  & map (zip [0..])
+  & zip [0..]
+  & concatMap (\(y, cubeLine) -> map (\(x, cube) -> (x,y,cube)) cubeLine)
+  & filter (\(_,_,c) -> c == Active)
+  & map (\(x,y,_) -> V4 x y 0 0)
+  & S.fromList
 
-mkWorld :: Int -> [[Cube]] -> World
-mkWorld growth cubes = foldl' (\m (y, cubeLine) -> foldl (\m' (x, cube) -> M.insert (V3 x y 0) cube m') m cubeLine) M.empty indexedCubes & (`M.union` world)
-  where
-    x' = headDef [] cubes & length
-    y' = length cubes
-    indexedCubes = zip [(- y' `div` 2)..] $ map (zip [(- x' `div` 2)..]) cubes
-    world = emptyWorld (x' + growth * 2) (y' + growth * 2) (growth * 2)
+-- Interdimensional helpers
+getFromWorld :: World -> S.Set Point
+getFromWorld (World3d x) = x
+getFromWorld (World4d x) = x
 
-adjacentDirections :: [V3 Int]
-adjacentDirections = [V3 x y z | x <- range, y <- range, z <- range, x /= 0 || y /= 0 || z /= 0]
+backToWorld :: World -> S.Set Point -> World
+backToWorld (World3d _) x = World3d x
+backToWorld (World4d _) x = World4d x
+
+to3d :: Point -> Point
+to3d (V4 x y z _) = V4 x y z 0
+
+project :: World -> Point -> Point
+project (World3d _) = to3d
+project (World4d _) = id
+-- Interdimensional helpers
+
+setupWorld :: World -> S.Set Point -> World
+setupWorld world points = S.map (project world) points & backToWorld world
+
+worldToCheck :: World -> World
+worldToCheck world = getFromWorld world & S.toList & concatMap (\p -> map (+ p) $ S.toList $ adjacentDirections world) & S.fromList & backToWorld world
+
+adjacentDirections :: World -> S.Set Point
+adjacentDirections world = [V4 x y z w | x <- range, y <- range, z <- range, w <- range]
+  & map (project world)
+  & S.fromList
+  & S.delete Vector.zero
   where range = [-1,0,1]
 
-adjacentCubes :: Point -> World -> [Cube]
-adjacentCubes point world = map (lookupDef . (+ point)) adjacentDirections
-  where lookupDef p = M.findWithDefault Inactive p world
-
-numActiveCubes :: [Cube] -> Int
-numActiveCubes = length . filter (== Active)
-
-updateCube :: Cube -> [Cube] -> Cube
-updateCube Inactive neighbours = if numActiveCubes neighbours == 3 then Active else Inactive
-updateCube Active neighbours = if numActive == 2 || numActive == 3 then Active else Inactive
-  where numActive = numActiveCubes neighbours
-
 nextIteration :: World -> World
-nextIteration world = M.mapWithKey (\point cube -> updateCube cube (adjacentCubes point world)) world
+nextIteration world = S.foldl' (\s point -> if shouldBeActive point world then S.insert point s else s) S.empty checkWorld & backToWorld world
+  where checkWorld = worldToCheck world & getFromWorld
 
-day17part1 :: String -> String
-day17part1 = show . length . filter (== Active) . M.elems . last . take (succ runs) . iterate nextIteration . mkWorld runs . readListOf (many cubeParser <* newline)
+shouldBeActive :: Point -> World -> Bool
+shouldBeActive point world = if pointInWorld then neighbourCount == 2 || neighbourCount == 3 else neighbourCount == 3
+  where
+    worldPoints = getFromWorld world
+    pointInWorld = S.member point worldPoints
+    neighbourCount = adjacentDirections world & S.map (+ point) & S.intersection worldPoints & S.size
+
+runForWorld :: World -> String -> String
+runForWorld world = show . S.size . getFromWorld . last . take (succ runs) . iterate nextIteration . setupWorld world . inputToPoints. readListOf (many cubeParser <* newline)
   where runs = 6
 
+day17part1 :: String -> String
+day17part1 = runForWorld (World3d S.empty)
+
 day17part2 :: String -> String
-day17part2 _ = ""
+day17part2 = runForWorld (World4d S.empty)
