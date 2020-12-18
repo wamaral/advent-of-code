@@ -12,6 +12,8 @@ import           Day13
 import           Day14
 import           Day15
 import           Day16
+import           Day17
+import           Day18
 import           Day2
 import           Day3
 import           Day4
@@ -86,5 +88,13 @@ main = defaultMain
   , env (readInput 16) $ \input -> bgroup "Day 16"
       [ bench "part 1" $ nf day16part1 input
       , bench "part 2" $ nf day16part2 input
+      ]
+  , env (readInput 17) $ \input -> bgroup "Day 17"
+      [ bench "part 1" $ nf day17part1 input
+      , bench "part 2" $ nf day17part2 input
+      ]
+  , env (readInput 18) $ \input -> bgroup "Day 18"
+      [ bench "part 1" $ nf day18part1 input
+      , bench "part 2" $ nf day18part2 input
       ]
   ]
