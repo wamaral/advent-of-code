@@ -15,3 +15,11 @@ spec = do
       day18part1 "5 + (8 * 3 + 9 + 3 * 4 * 3)" `shouldBe` "437"
       day18part1 "5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))" `shouldBe` "12240"
       day18part1 "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2" `shouldBe` "13632"
+  describe "part 2" $ do
+    it "runs provided example" $ do
+      day18part2 "1 + 2 * 3 + 4 * 5 + 6" `shouldBe` "231"
+      day18part2 "1 + (2 * 3) + (4 * (5 + 6))" `shouldBe` "51"
+      day18part2 "2 * 3 + (4 * 5)" `shouldBe` "46"
+      day18part2 "5 + (8 * 3 + 9 + 3 * 4 * 3)" `shouldBe` "1445"
+      day18part2 "5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))" `shouldBe` "669060"
+      day18part2 "((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2" `shouldBe` "23340"
