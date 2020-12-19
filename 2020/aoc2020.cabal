@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f2bb1c2301e4d2c8f3a606573965aced61ad0620a85ee5654efd295a1e4bb288
+-- hash: badfa33e59bac0ef3ceb0fdbc4db4c16982e4a8dff59543ef02db4dd21632db3
 
 name:           aoc2020
 version:        0.1.0.0
@@ -59,6 +59,7 @@ library
     , megaparsec
     , monad-loops
     , mtl
+    , parser-combinators
     , safe
     , split
     , vector

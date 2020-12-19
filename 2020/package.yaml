@@ -37,6 +37,7 @@ library:
   - vector
   - linear
   - monad-loops
+  - parser-combinators
 
 executables:
   aoc2020-exe:
