@@ -16,6 +16,12 @@ import           Day17
 import           Day18
 import           Day19
 import           Day2
+import           Day20
+import           Day21
+import           Day22
+import           Day23
+import           Day24
+import           Day25
 import           Day3
 import           Day4
 import           Day5
@@ -101,5 +107,29 @@ main = defaultMain
   , env (readInput 19) $ \input -> bgroup "Day 19"
       [ bench "part 1" $ nf day19part1 input
       , bench "part 2" $ nf day19part2 input
+      ]
+  , env (readInput 20) $ \input -> bgroup "Day 20"
+      [ bench "part 1" $ nf day20part1 input
+      , bench "part 2" $ nf day20part2 input
+      ]
+  , env (readInput 21) $ \input -> bgroup "Day 21"
+      [ bench "part 1" $ nf day21part1 input
+      , bench "part 2" $ nf day21part2 input
+      ]
+  , env (readInput 22) $ \input -> bgroup "Day 22"
+      [ bench "part 1" $ nf day22part1 input
+      , bench "part 2" $ nf day22part2 input
+      ]
+  , env (readInput 23) $ \input -> bgroup "Day 23"
+      [ bench "part 1" $ nf day23part1 input
+      , bench "part 2" $ nf day23part2 input
+      ]
+  , env (readInput 24) $ \input -> bgroup "Day 24"
+      [ bench "part 1" $ nf day24part1 input
+      , bench "part 2" $ nf day24part2 input
+      ]
+  , env (readInput 25) $ \input -> bgroup "Day 25"
+      [ bench "part 1" $ nf day25part1 input
+      , bench "part 2" $ nf day25part2 input
       ]
   ]
