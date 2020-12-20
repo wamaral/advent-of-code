@@ -4,9 +4,9 @@ module Day19
 
 import           Common
 import           Data.Function
+import           Data.List
 import qualified Data.Map.Strict      as M
 import           Data.Maybe
-import qualified Data.Set             as S
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
 
@@ -48,20 +48,25 @@ inputParser = do
 parseInput :: String -> (Ruleset, [Message])
 parseInput = fromMaybe (M.empty, []) . parseMaybe inputParser
 
-allValidMessages :: Ruleset -> Index -> [Message]
-allValidMessages rules i = case M.lookup i rules of
-  Nothing           -> []
-  Just (Token x)    -> [[x]]
-  Just (Product xs) -> subMessages xs
-  Just (Sum x1 x2)  -> subMessages x1 ++ subMessages x2
+matchAllRules :: Ruleset -> Message -> Bool
+matchAllRules rules = any null . matchRule 0
   where
-    subMessages idxs = map (allValidMessages rules) idxs & sequence & map concat
+    matchRule :: Index -> Message -> [Message]
+    matchRule ruleNumber message = case M.lookup ruleNumber rules of
+      Nothing           -> []
+      Just (Token c)    -> [tail message | [c] `isPrefixOf` message]
+      Just (Product xs) -> subRules message [xs]
+      Just (Sum xs ys)  -> subRules message [xs, ys]
+    subRules :: Message -> [[Index]] -> [Message]
+    subRules message idxs = concatMap (foldl' (flip (concatMap . matchRule)) [message]) idxs
 
 day19part1 :: String -> String
-day19part1 input = filter (`S.member` validMessages) messages & length & show
+day19part1 input = filter (matchAllRules ruleset) messages & length & show
   where
     (ruleset, messages) = parseInput input
-    validMessages = allValidMessages ruleset 0 & S.fromList
 
 day19part2 :: String -> String
-day19part2 _ = ""
+day19part2 input = filter (matchAllRules updatedRuleset) messages & length & show
+  where
+    (ruleset, messages) = parseInput input
+    updatedRuleset = M.insert 8 (Sum [42] [42, 8]) $ M.insert 11 (Sum [42, 31] [42, 11, 31]) ruleset
