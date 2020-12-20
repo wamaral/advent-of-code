@@ -38,6 +38,7 @@ library:
   - linear
   - monad-loops
   - parser-combinators
+  - htrace
 
 executables:
   aoc2020-exe:

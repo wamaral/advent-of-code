@@ -3,6 +3,7 @@ module Common where
 import           Control.Exception
 import           Data.Maybe
 import           Data.Void
+import           Debug.HTrace
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
 
@@ -39,6 +40,9 @@ zipTail xs = zip xs (tail xs)
 fixpoint :: Eq a => (a -> a) -> a -> a
 fixpoint f x = if x == x' then x else fixpoint f x'
   where x' = f x
+
+traceWith :: (a -> String) -> a -> a
+traceWith f v = htrace (f v) v
 
 inputNotFound :: IOError -> IO String
 inputNotFound _ = pure ""
