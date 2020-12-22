@@ -41,6 +41,10 @@ fixpoint :: Eq a => (a -> a) -> a -> a
 fixpoint f x = if x == x' then x else fixpoint f x'
   where x' = f x
 
+-- | trace but only after something has evaluated to WHNF
+trace' :: String -> a -> a
+trace' str x = htrace (x `seq` str) x
+
 traceWith :: (a -> String) -> a -> a
 traceWith f v = htrace (f v) v
 
