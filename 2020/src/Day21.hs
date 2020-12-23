@@ -82,4 +82,13 @@ day21part1 input = menu
     countAppearances ingredient = filter (== ingredient) (allIngredients menu) & length
 
 day21part2 :: String -> String
-day21part2 _ = ""
+day21part2 input = menu
+  & foodToMatchers
+  & (\ms -> shrink menu ms menuAllergens)
+  & filter (isJust . mallergen)
+  & sortOn mallergen
+  & map mingredient
+  & intercalate ","
+  where
+    menu = readListOf foodParser input
+    menuAllergens = uniqueAllergens menu & S.toList
