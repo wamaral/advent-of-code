@@ -48,6 +48,9 @@ trace' str x = htrace (x `seq` str) x
 traceWith :: (a -> String) -> a -> a
 traceWith f v = htrace (f v) v
 
+traceShowId' :: Show a => a -> a
+traceShowId' x = htrace (show x) x
+
 inputNotFound :: IOError -> IO String
 inputNotFound _ = pure ""
 
