@@ -48,6 +48,12 @@ trace' str x = htrace (x `seq` str) x
 traceWith :: (a -> String) -> a -> a
 traceWith f v = htrace (f v) v
 
+traceShowWith :: Show a => (String -> String) -> a -> a
+traceShowWith f v = htrace (f (show v)) v
+
+traceShowLabel :: Show a => String -> a -> a
+traceShowLabel s = traceShowWith ((s ++ " => ") ++)
+
 traceShowId' :: Show a => a -> a
 traceShowId' x = htrace (show x) x
 
