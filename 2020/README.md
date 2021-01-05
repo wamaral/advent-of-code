@@ -21,7 +21,7 @@ stack build --file-watch --test --test-arguments '--rerun --failure-report=TESTR
 ## Benchmark
 
 ```
-stack bench
+stack bench --benchmark-arguments '--output=benchmark.html'
 ```
 
 ## Benchmark results
