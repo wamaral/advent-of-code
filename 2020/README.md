@@ -26,7 +26,7 @@ stack bench
 
 ## Benchmark results
 
-### [Fancy HTML version](https://wamaral.github.io/advent-of-code/benchmark.html)
+### [Fancy HTML version](https://wamaral.github.io/advent-of-code/2020/benchmark.html)
 
 > Note that not much effort was put into performance, solutions might be far from ideal in that regard
 
