@@ -24,6 +24,4 @@ stack build --file-watch --test --test-arguments '--rerun --failure-report=TESTR
 stack bench --benchmark-arguments '--output=benchmark.html'
 ```
 
-## Benchmark results
-
-### [Fancy HTML version](https://wamaral.github.io/advent-of-code/2021/benchmark.html)
+## [Benchmark results](https://wamaral.github.io/advent-of-code/2021/benchmark.html)
