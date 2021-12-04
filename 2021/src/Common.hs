@@ -1,9 +1,12 @@
 module Common where
 
 import           Control.Exception
+import           Data.Function
+import qualified Data.Map             as M
 import           Data.Maybe
 import           Data.Void
 import           Debug.HTrace
+import           Linear.V2
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
 
@@ -40,6 +43,11 @@ zipTail xs = zip xs (tail xs)
 fixpoint :: Eq a => (a -> a) -> a -> a
 fixpoint f x = if x == x' then x else fixpoint f x'
   where x' = f x
+
+listOfListsToV2Map :: [[a]] -> M.Map (V2 Int) a
+listOfListsToV2Map xs = zip [0..] xs
+  & concatMap (\(i, line) -> map (\(j, x) -> (V2 i j, x)) $ zip [0..] line)
+  & M.fromList
 
 -- | trace but only after something has evaluated to WHNF
 trace' :: String -> a -> a
