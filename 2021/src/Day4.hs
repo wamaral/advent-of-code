@@ -56,6 +56,15 @@ getWinner (Input draw boards) = go 0
             Nothing -> go (succ n)
             Just w  -> (w, partialDraw)
 
+getLastWinner :: Input -> (Board, Draw)
+getLastWinner (Input draw boards) = go boards 0
+  where go bs n = do
+          let partialDraw = take n draw
+          let (winners, losers) = partition (isWinner partialDraw) bs
+          if null losers && length winners == 1
+            then (head winners, partialDraw)
+            else go losers (succ n)
+
 getUnmarked :: Board -> Draw -> Board
 getUnmarked board draw = M.filter (`notElem` draw) board
 
@@ -66,4 +75,7 @@ day4part1 input = do
   show $ sum (M.elems unmarked) * last draw
 
 day4part2 :: String -> String
-day4part2 _ = ""
+day4part2 input = do
+  let (lastWinner, draw) = getLastWinner $ parseInput input
+  let unmarked = getUnmarked lastWinner draw
+  show $ sum (M.elems unmarked) * last draw
