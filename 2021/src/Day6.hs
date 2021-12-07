@@ -29,8 +29,11 @@ simulate old = new
     new = M.mapKeys pred old
     procreating = M.lookup (-1) new & fromMaybe 0
 
+run :: Int -> [Int] -> Integer
+run n = sum . M.elems . last . take (succ n) . iterate simulate . startingFish
+
 day6part1 :: String -> String
-day6part1 = show . sum . M.elems . last . take 81 . iterate simulate . startingFish . parseInput
+day6part1 = show . run 80 . parseInput
 
 day6part2 :: String -> String
-day6part2 _ = ""
+day6part2 = show . run 256 . parseInput
