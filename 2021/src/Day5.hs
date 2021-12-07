@@ -23,12 +23,6 @@ parsePoints = do
   y2 <- intParser
   return (V2 x1 y1, V2 x2 y2)
 
-interpolate :: (Enum a, Eq a, Ord a) => a -> a -> [a]
-interpolate a b
-  | a < b = [a..b]
-  | a > b = [a,(pred a)..b]
-  | otherwise = []
-
 makeLine :: (Point, Point) -> Line
 makeLine (V2 x1 y1, V2 x2 y2)
   | x1 == x2 = map (V2 x1) (interpolate y1 y2)

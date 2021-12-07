@@ -49,6 +49,12 @@ listOfListsToV2Map xs = zip [0..] xs
   & concatMap (\(i, line) -> map (\(j, x) -> (V2 i j, x)) $ zip [0..] line)
   & M.fromList
 
+interpolate :: (Enum a, Eq a, Ord a) => a -> a -> [a]
+interpolate a b
+  | a < b = [a..b]
+  | a > b = [a,(pred a)..b]
+  | otherwise = []
+
 -- | trace but only after something has evaluated to WHNF
 trace' :: String -> a -> a
 trace' str x = htrace (x `seq` str) x
