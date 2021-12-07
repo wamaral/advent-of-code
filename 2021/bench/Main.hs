@@ -48,10 +48,10 @@ main = defaultMain
       [ bench "part 1" $ nf day4part1 input
       , bench "part 2" $ nf day4part2 input
       ]
-  -- , env (readInput 5) $ \input -> bgroup "Day 5"
-  --     [ bench "part 1" $ nf day5part1 input
-  --     , bench "part 2" $ nf day5part2 input
-  --     ]
+  , env (readInput 5) $ \input -> bgroup "Day 5"
+      [ bench "part 1" $ nf day5part1 input
+      , bench "part 2" $ nf day5part2 input
+      ]
   -- , env (readInput 6) $ \input -> bgroup "Day 6"
   --     [ bench "part 1" $ nf day6part1 input
   --     , bench "part 2" $ nf day6part2 input
