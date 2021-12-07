@@ -51,4 +51,10 @@ day5part1 = show
   . readListOf parsePoints
 
 day5part2 :: String -> String
-day5part2 _ = ""
+day5part2 = show
+  . M.size
+  . M.filter (> 1)
+  . M.fromListWith (+)
+  . flip zip (repeat 1 :: [Int])
+  . concatMap makeLine
+  . readListOf parsePoints
