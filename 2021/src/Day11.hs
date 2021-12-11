@@ -47,8 +47,14 @@ steps :: Int -> Cave -> (Cave, Int)
 steps n cave = iterate go (cave, 0) !! max 0 n
   where go (c, i) = step c & second (i +)
 
+allFlash :: Cave -> Bool
+allFlash = all ((== 0) . snd) . M.toList
+
+stepTillAllFlash :: Cave -> Int
+stepTillAllFlash cave = iterate (\c -> step c & fst) cave & takeWhile (not . allFlash) & length
+
 day11part1 :: String -> String
 day11part1 = show . snd . steps 100 . parseInput
 
 day11part2 :: String -> String
-day11part2 _ = ""
+day11part2 = show . stepTillAllFlash . parseInput
