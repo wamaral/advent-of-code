@@ -4,6 +4,8 @@ module Day10
 
 import           Common
 import           Data.Function
+import           Data.List
+import           Data.Maybe
 import           Data.Stack
 import           Safe
 import           Text.Megaparsec
@@ -25,6 +27,20 @@ points '}' = 1197
 points '>' = 25137
 points _   = 0
 
+points2 :: Char -> Int
+points2 ')' = 1
+points2 ']' = 2
+points2 '}' = 3
+points2 '>' = 4
+points2 _   = 0
+
+calc2 :: String -> Int
+calc2 = foldl' (\acc c -> acc * 5 + points2 c) 0
+
+unwind :: Stack Char -> String
+unwind = go ""
+  where go xs st = if stackIsEmpty st then xs else stackPop st & fromJust & (\(a,b) -> go (xs ++ [b]) a)
+
 processLine :: String -> (Stack Char, String)
 processLine = go stackNew
   where
@@ -35,7 +51,18 @@ processLine = go stackNew
       | otherwise = (st, x:xs)
 
 day10part1 :: String -> String
-day10part1 = show . sum . map (points . headDef ' ') . filter (not . null) . map (snd . processLine) . readListOf inputParser
+day10part1 input = readListOf inputParser input
+  & map (snd . processLine)
+  & filter (not . null)
+  & map (points . headDef ' ')
+  & sum
+  & show
 
 day10part2 :: String -> String
-day10part2 _ = ""
+day10part2 input = readListOf inputParser input
+  & map processLine
+  & filter (null . snd)
+  & map (calc2 . map pair . unwind . fst)
+  & middle
+  & show
+  where middle xs = sort xs !! (length xs `div` 2)
