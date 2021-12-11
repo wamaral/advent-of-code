@@ -39,6 +39,7 @@ library:
   - monad-loops
   - parser-combinators
   - htrace
+  - Stack
 
 executables:
   aoc2021-exe:

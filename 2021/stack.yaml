@@ -43,6 +43,7 @@ packages:
 # extra-deps: []
 extra-deps:
 - htrace-0.1@sha256:979d372b9a12986fb1cdd7022ad64e333594761ade6b8e9cb4af748f6af5f3d5,651
+- Stack-0.4.0@sha256:ada69a23ed9bbaf97260397f6b39b7a1f4e22a11bcac3fe2e8f23f1513f59fd8,1092
 
 # Override default flag values for local packages and extra-deps
 # flags: {}
