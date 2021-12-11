@@ -19,14 +19,13 @@ parseInput = fromMaybe [] . parseMaybe crabParser
 -- Converted to return Integral instead of Fractional
 median :: (Ord a, Integral a) => [a] -> a
 median x =
-   if odd n
-     then sort x !! (n `div` 2)
-     else ((sort x !! (n `div` 2 - 1)) + (sort x !! (n `div` 2))) `div` 2
-    where n = length x
+  if odd n
+    then sort x !! (n `div` 2)
+    else ((sort x !! (n `div` 2 - 1)) + (sort x !! (n `div` 2))) `div` 2
+  where n = length x
 
-mean :: (Integral a) => [a] -> a
-mean xs = round $ sum' / genericLength xs
-  where sum' = realToFrac (sum xs) :: Double
+mean :: (Integral a) => [a] -> Double
+mean xs = realToFrac (sum xs) / genericLength xs
 
 sumUpTo :: Int -> Int
 sumUpTo n = n * succ n `div` 2
@@ -42,9 +41,11 @@ day7part1 input = crabs
 
 day7part2 :: String -> String
 day7part2 input = crabs
-  & map (\x -> sumUpTo (abs $ x - pos))
-  & sum
+  & posCandidates
+  & map (sum . solve crabs)
+  & minimum
   & show
   where
     crabs = parseInput input
-    pos = mean crabs
+    posCandidates c = map ($ mean c) [floor, ceiling]
+    solve c pos = map (\c' -> sumUpTo (abs $ c' - pos)) c
