@@ -49,6 +49,12 @@ foldDots dots fold = S.map (\dot -> if toFold dot then dot - (diff dot & normali
     diff dot = dot ^-^ fold
     normalize dot = if fold ^._x == 0 then dot * V2 0 1 else dot * V2 1 0
 
+toLetters :: Dots -> String
+toLetters dots = map (\y -> map (\x -> if S.member (V2 x y) dots then '#' else '.') [0..maxX dots]) [0..maxY dots] & unlines
+  where
+    maxX = S.findMax . S.map (^. _x)
+    maxY = S.findMax . S.map (^. _y)
+
 day13part1 :: String -> String
 day13part1 input = foldl' foldDots dots (take 1 folds)
   & S.size
@@ -56,4 +62,6 @@ day13part1 input = foldl' foldDots dots (take 1 folds)
   where (dots, folds) = parseInput input
 
 day13part2 :: String -> String
-day13part2 _ = ""
+day13part2 input = foldl' foldDots dots folds
+  & toLetters
+  where (dots, folds) = parseInput input

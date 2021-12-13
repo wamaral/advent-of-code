@@ -30,6 +30,15 @@ input = unlines
   , "fold along x=5"
   ]
 
+output :: String
+output = unlines
+  [ "#####"
+  , "#...#"
+  , "#...#"
+  , "#...#"
+  , "#####"
+  ]
+
 spec :: Spec
 spec = do
   describe "part 1" $ do
@@ -37,4 +46,4 @@ spec = do
       day13part1 input `shouldBe` "17"
   describe "part 2" $ do
     it "runs provided examples" $ do
-      day13part2 input `shouldBe` ""
+      day13part2 input `shouldBe` output
