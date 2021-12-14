@@ -4,13 +4,12 @@ module Day14
 
 import           Common
 import           Data.Function
-import           Data.List
 import qualified Data.Map             as M
 import           Data.Maybe
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
 
-type Polymer = String
+type Polymer = M.Map String Integer
 type Rules = M.Map String Char
 
 ruleParser :: Parser (String, Char)
@@ -23,32 +22,38 @@ ruleParser = do
 rulesParser :: Parser Rules
 rulesParser = M.fromList <$> some (ruleParser <* optional newline)
 
-inputParser :: Parser (Polymer, Rules)
+inputParser :: Parser (Polymer, String, Rules)
 inputParser = do
-  polymer <- some (upperChar <* optional newline)
+  polymerString <- some (upperChar <* optional newline)
+  let polymer = M.fromListWith (+) $ map (\(a,b) -> ([a,b], 1)) $ zipTail polymerString
   _ <- newline
   rules <- rulesParser
   _ <- eof
-  return (polymer, rules)
+  return (polymer, polymerString, rules)
 
-parseInput :: String -> (Polymer, Rules)
-parseInput = fromMaybe ("", M.empty) . parseMaybe inputParser
+parseInput :: String -> (Polymer, String, Rules)
+parseInput = fromMaybe (M.empty, "", M.empty) . parseMaybe inputParser
 
 step :: Rules -> Polymer -> Polymer
-step rules p = zipTail p & concatMap applyRule & (head p :)
-  where applyRule (a,b) = maybe [b] (\c -> [c,b]) $ M.lookup [a,b] rules
+step rules p = M.foldrWithKey updatePolymer p rules
+  where updatePolymer ab c polymer = case M.lookup ab p of
+          Nothing -> polymer
+          Just n -> M.insertWith (+) [head ab,c] n polymer
+            & M.insertWith (+) [c,last ab] n
+            & M.adjust (\x -> x - n) ab
+
+runTimes :: Int -> (Polymer, String, Rules) -> Integer
+runTimes n (polymer, polymerString, rules) = polymer
+  & iterate (step rules)
+  & take (succ n)
+  & last
+  & M.mapKeysWith (+) head
+  & M.insertWith (+) (last polymerString) 1
+  & M.elems
+  & (\xs -> maximum xs - minimum xs)
 
 day14part1 :: String -> String
-day14part1 input = polymer
-  & iterate (step rules)
-  & take 11
-  & last
-  & sort
-  & group
-  & (\xs -> (maximumBy (compare `on` length) xs, minimumBy (compare `on` length) xs))
-  & (\(a,b) -> length a - length b)
-  & show
-  where (polymer, rules) = parseInput input
+day14part1 = show . runTimes 10 . parseInput
 
 day14part2 :: String -> String
-day14part2 _ = ""
+day14part2 = show . runTimes 40 . parseInput
