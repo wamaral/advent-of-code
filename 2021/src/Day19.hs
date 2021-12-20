@@ -88,8 +88,11 @@ matchAll (firstScanner:restScanners) = go (beacons baseScanner) (baseScanner : r
       let (newRegion, newScanners) = foldl' matchScanner (region, []) scanners
       if all isMatched newScanners then (newRegion, newScanners) else go newRegion newScanners
 
+maxDistance :: [Coord] -> Int
+maxDistance coords = maximum [sum $ a ^-^ b | a <- coords, b <- coords]
+
 day19part1 :: String -> String
 day19part1 = show . S.size . fst . matchAll . parseInput
 
 day19part2 :: String -> String
-day19part2 _ = ""
+day19part2 = show . maxDistance . mapMaybe position . snd . matchAll . parseInput
