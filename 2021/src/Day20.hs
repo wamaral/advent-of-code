@@ -86,10 +86,12 @@ enhance lkp image = Image {pixels = newPixels, background = newBackground}
 -- showImage image = map (\y -> concatMap (\x -> maybe " " show (M.lookup (V2 x y) (pixels image))) [min' ^._x .. max' ^._x]) [min' ^._y .. max' ^._y] & unlines
 --   where (min', max') = M.keys (pixels image) & (\xs -> (head xs, last xs))
 
+enhanceN :: Int -> Lookup -> Image -> Image
+enhanceN n lkp image = iterate (enhance lkp) image & take (succ n) & last
+
 day20part1 :: String -> String
 day20part1 input = baseImage
-  & enhance lkp
-  & enhance lkp
+  & enhanceN 2 lkp
   & pixels
   & M.filter (== Lit)
   & M.size
@@ -97,4 +99,10 @@ day20part1 input = baseImage
   where (lkp, baseImage) = parseInput input
 
 day20part2 :: String -> String
-day20part2 _ = ""
+day20part2 input = baseImage
+  & enhanceN 50 lkp
+  & pixels
+  & M.filter (== Lit)
+  & M.size
+  & show
+  where (lkp, baseImage) = parseInput input
