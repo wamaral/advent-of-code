@@ -45,8 +45,8 @@ fixpoint f x = if x == x' then x else fixpoint f x'
   where x' = f x
 
 listOfListsToV2Map :: [[a]] -> M.Map (V2 Int) a
-listOfListsToV2Map xs = zip [0..] xs
-  & concatMap (\(i, line) -> map (\(j, x) -> (V2 i j, x)) $ zip [0..] line)
+listOfListsToV2Map as = zip [0..] as
+  & concatMap (\(y, line) -> map (\(x, a) -> (V2 x y, a)) $ zip [0..] line)
   & M.fromList
 
 interpolate :: (Enum a, Eq a, Ord a) => a -> a -> [a]
