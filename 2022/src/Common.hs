@@ -24,11 +24,20 @@ signedIntParser = do
 linesParser :: Parser a -> Parser [a]
 linesParser parser = someTill (parser <* optional newline) eof
 
+chunkParser :: Parser a -> Parser [[a]]
+chunkParser parser = some (parser <* optional newline) `sepBy` newline
+
 readListOf :: Parser a -> String -> [a]
 readListOf parser = fromMaybe [] . parseMaybe (linesParser parser)
 
 readListOfDebug :: Show a => Parser a -> String -> String
 readListOfDebug parser = either errorBundlePretty show . parse (linesParser parser) "Debug"
+
+readChunksOf :: Parser a -> String -> [[a]]
+readChunksOf parser = fromMaybe [] . parseMaybe (chunkParser parser)
+
+readChunksOfDebug :: Show a => Parser a -> String -> String
+readChunksOfDebug parser = either errorBundlePretty show . parse (chunkParser parser) "Debug"
 
 stringToInt :: String -> Maybe Int
 stringToInt s = read <$> parseMaybe parser s
