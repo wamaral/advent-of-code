@@ -4,16 +4,23 @@ module Day6
 
 import           Data.Function
 import           Data.List
+import           Data.List.Split
 import           Data.Maybe
-import qualified Data.Set      as S
+import qualified Data.Set        as S
+
+allDistinct :: String -> Bool
+allDistinct list = S.fromList list
+  & S.size
+  & (== length list)
+
+findPosition :: Int -> String -> Int
+findPosition countDistinct input = divvy countDistinct 1 input
+  & findIndex allDistinct
+  & fmap (+ countDistinct)
+  & fromMaybe 0
 
 day6part1 :: String -> String
-day6part1 input = zipWith4 (\a b c d -> [a,b,c,d]) input (drop 1 input) (drop 2 input) (drop 3 input)
-  & findIndex allDistinct
-  & fmap (+ 4)
-  & fromMaybe 0
-  & show
-  where allDistinct = (== 4) . S.size . S.fromList
+day6part1 = show . findPosition 4
 
 day6part2 :: String -> String
-day6part2 _ = ""
+day6part2 = show . findPosition 14
