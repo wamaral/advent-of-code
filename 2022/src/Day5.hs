@@ -58,25 +58,28 @@ inputParser = do
 parseInput :: String -> (Crates, [Command])
 parseInput = fromMaybe (M.empty, []) . parseMaybe inputParser
 
-moveOne :: Int -> Int -> Crates -> Crates
-moveOne from to crates = do
+popN :: Int -> CrateStack -> (CrateStack, String)
+popN n crates = atDef (crates, "") (iterate safePop (crates, "")) n
+    where safePop (crate, acc) = case S.stackPop crate of
+            Just (newCrate, popped) -> (newCrate, acc ++ [popped])
+            Nothing                 -> (crate, acc)
+
+moveBatchTransform :: (String -> String) -> Int -> Int -> Int -> Crates -> Crates
+moveBatchTransform f from to n crates = do
   let fromCrate = (M.!) crates from
   let toCrate = (M.!) crates to
-  case S.stackPop fromCrate of
-    Just (newFrom, popped) -> do
-      let newTo = S.stackPush toCrate popped
-      M.insert to newTo $ M.insert from newFrom crates
-    Nothing -> crates
+  let (newFrom, popped) = popN n fromCrate
+  let newTo = foldl' S.stackPush toCrate (f popped)
+  M.insert to newTo $ M.insert from newFrom crates
 
-runCommand :: Crates -> Command -> Crates
-runCommand crates (Command n from to) = atDef crates (iterate (moveOne from to) crates) n
-
-day5part1 :: String -> String
-day5part1 input = foldl' runCommand crates commands
+run :: (String -> String) -> Crates -> [Command] -> String
+run f crates commands = foldl' (\c (Command n from to) -> moveBatchTransform f from to n c) crates commands
   & M.elems
   & mapM S.stackPeek
   & fromMaybe ""
-  where (crates, commands) = parseInput input
+
+day5part1 :: String -> String
+day5part1 = uncurry (run id) . parseInput
 
 day5part2 :: String -> String
-day5part2 _ = ""
+day5part2 = uncurry (run reverse) . parseInput
