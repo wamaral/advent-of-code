@@ -21,6 +21,9 @@ signedIntParser = do
   int <- stringToInt0 <$> some digitChar
   return $ if sign == Just '-' then negate int else int
 
+singleDigitParser :: Parser Int
+singleDigitParser = stringToInt0 . (: []) <$> digitChar
+
 linesParser :: Parser a -> Parser [a]
 linesParser parser = someTill (parser <* optional newline) eof
 
