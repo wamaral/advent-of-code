@@ -17,6 +17,18 @@ input = unlines
   , "R 2"
   ]
 
+input2 :: String
+input2 = unlines
+  [ "R 5"
+  , "U 8"
+  , "L 8"
+  , "D 3"
+  , "R 17"
+  , "D 10"
+  , "L 25"
+  , "U 20"
+  ]
+
 spec :: Spec
 spec = do
   describe "part 1" $ do
@@ -24,4 +36,5 @@ spec = do
       day9part1 input `shouldBe` "13"
   describe "part 2" $ do
     it "runs provided examples" $ do
-      day9part2 input `shouldBe` ""
+      day9part2 input `shouldBe` "1"
+      day9part2 input2 `shouldBe` "36"
