@@ -3,6 +3,7 @@ module Day7
   where
 
 import           Common
+import           Data.Function
 import           Data.List
 import qualified Data.Map.Strict      as M
 import qualified Data.Set             as S
@@ -65,4 +66,8 @@ day7part1 :: String -> String
 day7part1 = show . sum . filter (<= 100000) . M.elems. dirSizesAgg . mapInput M.empty ["/"] . readListOf inputLineParser
 
 day7part2 :: String -> String
-day7part2 _ = ""
+day7part2 input = M.elems ds & filter (> missingSpace) & minimum & show
+  where
+    ds = readListOf inputLineParser input & mapInput M.empty ["/"] & dirSizesAgg
+    rootSize = M.findWithDefault 0 ["/"] ds
+    missingSpace = 30000000 - (70000000 - rootSize)
