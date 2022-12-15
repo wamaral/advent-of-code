@@ -65,13 +65,13 @@ operate (Mult x) i = i * x
 operate (Add x) i  = i + x
 operate Square i   = i * i
 
-monkeyTurn :: Monkeys -> Int -> Monkeys
-monkeyTurn monkeys mId = do
+monkeyTurn :: (Int -> Int) -> Monkeys -> Int -> Monkeys
+monkeyTurn boredFn monkeys mId = do
   let monkey = (M.!) monkeys mId
   let monkeyTrue = (M.!) monkeys (testTrue monkey)
   let monkeyFalse = (M.!) monkeys (testFalse monkey)
   let worries = map (operate (operation monkey)) (items monkey)
-  let bored = map (`div` 3) worries
+  let bored = map boredFn worries
   let (toMonkeyTrue, toMonkeyFalse) = partition (\x -> x `mod` divisibleBy monkey == 0) bored
   let monkey' = monkey { items = [], inspectCount = inspectCount monkey + length bored }
   let monkeyTrue' = monkeyTrue { items = items monkeyTrue ++ toMonkeyTrue }
@@ -79,12 +79,12 @@ monkeyTurn monkeys mId = do
   let newMonkeys = M.fromList $ map (\m -> (monkeyId m, m)) [monkey', monkeyTrue', monkeyFalse']
   M.union newMonkeys monkeys
 
-monkeyRound :: Monkeys -> Monkeys
-monkeyRound monkeys = foldl' monkeyTurn monkeys [0..(pred $ M.size monkeys)]
+monkeyRound :: (Int -> Int) -> Monkeys -> Monkeys
+monkeyRound boredFn monkeys = foldl' (monkeyTurn boredFn) monkeys [0 .. (pred $ M.size monkeys)]
 
 day11part1 :: String -> String
 day11part1 input = parseInput input
-  & iterate monkeyRound
+  & iterate (monkeyRound (`div` 3))
   & take 21
   & last
   & M.map inspectCount
@@ -96,4 +96,17 @@ day11part1 input = parseInput input
   & show
 
 day11part2 :: String -> String
-day11part2 _ = ""
+day11part2 input = monkeys
+  & iterate (monkeyRound (`mod` modulo))
+  & take 10001
+  & last
+  & M.map inspectCount
+  & M.elems
+  & sort
+  & reverse
+  & take 2
+  & product
+  & show
+  where
+    monkeys = parseInput input
+    modulo = M.map divisibleBy monkeys & M.elems & product
