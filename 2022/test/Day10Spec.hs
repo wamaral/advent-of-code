@@ -155,6 +155,16 @@ input = unlines
   , "noop"
   ]
 
+output2 :: String
+output2 = unlines
+  [ "██  ██  ██  ██  ██  ██  ██  ██  ██  ██  "
+  , "███   ███   ███   ███   ███   ███   ███ "
+  , "████    ████    ████    ████    ████    "
+  , "█████     █████     █████     █████     "
+  , "██████      ██████      ██████      ████"
+  , "███████       ███████       ███████     "
+  ]
+
 spec :: Spec
 spec = do
   describe "part 1" $ do
@@ -162,4 +172,4 @@ spec = do
       day10part1 input `shouldBe` "13140"
   describe "part 2" $ do
     it "runs provided examples" $ do
-      day10part2 input `shouldBe` ""
+      day10part2 input `shouldBe` output2
