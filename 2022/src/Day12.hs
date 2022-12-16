@@ -33,13 +33,21 @@ elevationParser = toElevation <$> (lowerChar <|> char 'S' <|> char 'E')
     toElevation 'E' = 27
     toElevation x   = fromMaybe 99 $ lookup x $ zip ['a'..'z'] [1..]
 
-parseInput :: String -> Terrain
-parseInput input = do
-  let terrainMap = listOfListsToV2Map $ readListOf (many elevationParser) input
-  let terrainPaths = terrainMapToPaths terrainMap
-  let boundaries = M.filter (\e -> e == 0 || e == 27) terrainMap & M.assocs & map swap & sort & map snd
+elevationParserReverse :: Parser Elevation
+elevationParserReverse = toElevation <$> (lowerChar <|> char 'S' <|> char 'E')
+  where
+    toElevation 'S' = 27
+    toElevation 'E' = 0
+    toElevation x   = fromMaybe 99 $ lookup x $ zip ['z','y'..'a'] [1..]
+
+parseInput :: Parser Elevation -> String -> Terrain
+parseInput evParser input = do
+  let terrainMap' = listOfListsToV2Map $ readListOf (many evParser) input
+  let boundaries = M.filter (\e -> e == 0 || e == 27) terrainMap' & M.assocs & map swap & sort & map snd
   let startPosition = head boundaries
   let targetPosition = last boundaries
+  let terrainMap = M.adjust pred targetPosition terrainMap' & M.adjust succ startPosition
+  let terrainPaths = terrainMapToPaths terrainMap
   Terrain{..}
 
 neighbours :: Position -> [Position]
@@ -61,14 +69,15 @@ terrainMapToPaths t = M.mapWithKey (\k _ -> M.keys $ possibles t k) t
 shortestCount :: Terrain -> S.Set Position -> S.Set Position -> Int -> Int
 shortestCount t toCheck visited cnt = do
   let newToCheck = S.elems toCheck & mapMaybe (`M.lookup` terrainPaths t) & concat & filter (`S.notMember` visited) & S.fromList
-  if targetPosition t `elem` newToCheck
+  let canSeeTarget = (== 26) $ S.findMax $ S.map (fromMaybe 0 . (`M.lookup` terrainMap t)) toCheck
+  if canSeeTarget
     then cnt
     else shortestCount t newToCheck (S.union visited toCheck) (cnt + 1)
 
-
 day12part1 :: String -> String
 day12part1 input = show $ shortestCount terrain (S.singleton (startPosition terrain)) S.empty 1
-  where terrain = parseInput input
+  where terrain = parseInput elevationParser input
 
 day12part2 :: String -> String
-day12part2 _ = ""
+day12part2 input = show $ shortestCount terrain (S.singleton (startPosition terrain)) S.empty 0
+  where terrain = parseInput elevationParserReverse input

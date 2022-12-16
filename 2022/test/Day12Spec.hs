@@ -21,4 +21,4 @@ spec = do
       day12part1 input `shouldBe` "31"
   describe "part 2" $ do
     it "runs provided examples" $ do
-      day12part2 input `shouldBe` ""
+      day12part2 input `shouldBe` "29"
