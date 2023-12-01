@@ -1,0 +1,147 @@
+cabal-version: 2.2
+
+-- This file has been generated from package.yaml by hpack version 0.35.2.
+--
+-- see: https://github.com/sol/hpack
+
+name:           aoc2023
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/wamaral/advent-of-code/2023#readme>
+homepage:       https://github.com/wamaral/advent-of-code#readme
+bug-reports:    https://github.com/wamaral/advent-of-code/issues
+author:         Wagner Amaral
+maintainer:     wamaral@wamaral.org
+copyright:      2023 Wagner Amaral
+license:        BSD-3-Clause
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/wamaral/advent-of-code
+
+library
+  exposed-modules:
+      Common
+      Day1
+      Day10
+      Day11
+      Day12
+      Day13
+      Day14
+      Day15
+      Day16
+      Day17
+      Day18
+      Day19
+      Day2
+      Day20
+      Day21
+      Day22
+      Day23
+      Day24
+      Day25
+      Day3
+      Day4
+      Day5
+      Day6
+      Day7
+      Day8
+      Day9
+  other-modules:
+      Paths_aoc2023
+  autogen-modules:
+      Paths_aoc2023
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      Stack
+    , base >=4.7 && <5
+    , containers
+    , htrace
+    , lens
+    , linear
+    , megaparsec
+    , monad-loops
+    , mtl
+    , parser-combinators
+    , safe
+    , split
+    , vector
+  default-language: Haskell2010
+
+executable aoc2023-exe
+  main-is: Main.hs
+  other-modules:
+      Paths_aoc2023
+  autogen-modules:
+      Paths_aoc2023
+  hs-source-dirs:
+      app
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N -O2
+  build-depends:
+      aoc2023
+    , base >=4.7 && <5
+    , containers
+  default-language: Haskell2010
+
+test-suite aoc2023-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Day10Spec
+      Day11Spec
+      Day12Spec
+      Day13Spec
+      Day14Spec
+      Day15Spec
+      Day16Spec
+      Day17Spec
+      Day18Spec
+      Day19Spec
+      Day1Spec
+      Day20Spec
+      Day21Spec
+      Day22Spec
+      Day23Spec
+      Day24Spec
+      Day25Spec
+      Day2Spec
+      Day3Spec
+      Day4Spec
+      Day5Spec
+      Day6Spec
+      Day7Spec
+      Day8Spec
+      Day9Spec
+      Paths_aoc2023
+  autogen-modules:
+      Paths_aoc2023
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aoc2023
+    , base >=4.7 && <5
+    , hspec
+  default-language: Haskell2010
+
+benchmark aoc2023-bench
+  type: exitcode-stdio-1.0
+  main-is: Main.hs
+  other-modules:
+      Paths_aoc2023
+  autogen-modules:
+      Paths_aoc2023
+  hs-source-dirs:
+      bench
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      aoc2023
+    , base >=4.7 && <5
+    , criterion
+  default-language: Haskell2010
