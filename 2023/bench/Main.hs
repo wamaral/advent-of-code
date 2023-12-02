@@ -32,10 +32,10 @@ import           Day9
 
 main :: IO ()
 main = defaultMain
-  [ -- env (readInput 1) $ \input -> bgroup "Day 1"
-  --     [ bench "part 1" $ nf day1part1 input
-  --     , bench "part 2" $ nf day1part2 input
-  --     ]
+  [ env (readInput 1) $ \input -> bgroup "Day 1"
+      [ bench "part 1" $ nf day1part1 input
+      , bench "part 2" $ nf day1part2 input
+      ]
   -- , env (readInput 2) $ \input -> bgroup "Day 2"
   --     [ bench "part 1" $ nf day2part1 input
   --     , bench "part 2" $ nf day2part2 input
