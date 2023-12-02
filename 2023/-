@@ -36,10 +36,10 @@ cubeWithinLimit (Blue n)  = n <= 14
 
 isValidGame :: Game -> Bool
 isValidGame g = all isValidReveal $ reveals g
-  where isValidReveal r = all cubeWithinLimit r
+  where isValidReveal r = 
 
 day2part1 :: String -> String
-day2part1 = show . sum . map gameId . filter isValidGame . readListOf gameParser
+day2part1 = readListOfDebug gameParser
 
 day2part2 :: String -> String
 day2part2 _ = ""

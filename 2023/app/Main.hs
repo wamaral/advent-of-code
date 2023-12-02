@@ -1,4 +1,6 @@
-module Main where
+module Main
+  (main)
+  where
 
 import           Common
 import qualified Data.Map.Strict as Map
