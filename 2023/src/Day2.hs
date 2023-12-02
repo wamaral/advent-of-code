@@ -1,25 +1,39 @@
 {-# LANGUAGE RecordWildCards #-}
+{-# LANGUAGE TupleSections   #-}
 
 module Day2
   (day2part1, day2part2)
   where
 
 import Common
+import Data.Maybe
 import Text.Megaparsec
 import Text.Megaparsec.Char
 
-data Cube = Red Int | Green Int | Blue Int deriving (Show, Eq)
-data Game = Game { gameId :: Int, reveals :: [[Cube]] } deriving Show
+data CubeColor = R | G | B deriving (Show, Eq)
+type Cube = (CubeColor, Int)
+data Reveal = Reveal { r :: Int, g :: Int, b :: Int } deriving (Show, Eq)
+data Game = Game { gameId :: Int, reveals :: [Reveal] } deriving Show
 
 cubeParser :: Parser Cube
 cubeParser = choice
-  [ Red   <$> try (intParser <* string " red")
-  , Green <$> try (intParser <* string " green")
-  , Blue  <$> try (intParser <* string " blue")
+  [ (R,) <$> try (intParser <* string " red")
+  , (G,) <$> try (intParser <* string " green")
+  , (B,) <$> try (intParser <* string " blue")
   ]
 
-revealParser :: Parser [Cube]
-revealParser = many (cubeParser <* optional (string ", "))
+revealParser :: Parser Reveal
+revealParser = makeReveal <$> many (cubeParser <* optional (string ", "))
+  where
+    getCube :: CubeColor -> [Cube] -> Int
+    getCube _ [] = 0
+    getCube c cs = fromMaybe 0 $ lookup c cs
+    makeReveal :: [Cube] -> Reveal
+    makeReveal cs = Reveal
+      { r = getCube R cs
+      , g = getCube G cs
+      , b = getCube B cs
+      }
 
 gameParser :: Parser Game
 gameParser = do
@@ -29,17 +43,27 @@ gameParser = do
   reveals <- manyTill (revealParser <* optional (string "; ")) newline
   pure Game{..}
 
-cubeWithinLimit :: Cube -> Bool
-cubeWithinLimit (Red n)   = n <= 12
-cubeWithinLimit (Green n) = n <= 13
-cubeWithinLimit (Blue n)  = n <= 14
+isValidReveal :: Reveal -> Bool
+isValidReveal reveal = r reveal <= 12 && g reveal <= 13 && b reveal <= 14
 
 isValidGame :: Game -> Bool
-isValidGame g = all isValidReveal $ reveals g
-  where isValidReveal r = all cubeWithinLimit r
+isValidGame = all isValidReveal . reveals
+
+maxReveals :: Reveal -> Reveal -> Reveal
+maxReveals r1 r2 = Reveal
+  { r = max (r r1) (r r2)
+  , g = max (g r1) (g r2)
+  , b = max (b r1) (b r2)
+  }
+
+minGame :: Game -> Reveal
+minGame game = foldl1 maxReveals (reveals game)
+
+powerReveal :: Reveal -> Int
+powerReveal reveal = r reveal * g reveal * b reveal
 
 day2part1 :: String -> String
 day2part1 = show . sum . map gameId . filter isValidGame . readListOf gameParser
 
 day2part2 :: String -> String
-day2part2 _ = ""
+day2part2 = show . sum . map (powerReveal . minGame) . readListOf gameParser
