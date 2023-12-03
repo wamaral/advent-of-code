@@ -11,13 +11,14 @@ import           Linear.V2
 import           Text.Megaparsec
 import           Text.Megaparsec.Char
 
-data EnginePart = Digit Int | Symbol Char | Empty deriving Eq
+data EnginePart = Digit Int | Symbol Char | Gear | Empty deriving Eq
 type Position = V2 Int
 type Engine = M.Map Position EnginePart
 
 instance Show EnginePart where
   show (Digit i) = show i
   show (Symbol s) = show s
+  show Gear = "*"
   show Empty = "Empty"
 
 isDigit :: EnginePart -> Bool
@@ -26,12 +27,18 @@ isDigit _ = False
 
 isSymbol :: EnginePart -> Bool
 isSymbol (Symbol _) = True
+isSymbol Gear = True
 isSymbol _ = False
+
+isGear :: EnginePart -> Bool
+isGear Gear = True
+isGear _ = False
 
 partParser :: Parser EnginePart
 partParser = choice
-  [ Digit <$> singleDigitParser
-  , Empty <$ (char '.')
+  [ Digit  <$> singleDigitParser
+  , Empty  <$  (char '.')
+  , Gear   <$  (char '*')
   , Symbol <$> printChar
   ]
 
@@ -65,6 +72,9 @@ digitStart engine (V2 x y) = coords
 symbolPositions :: Engine -> [Position]
 symbolPositions = M.keys . M.filter isSymbol
 
+gearPositions :: Engine -> [Position]
+gearPositions = M.keys . M.filter isGear
+
 numberAt :: Engine -> Position -> Int
 numberAt engine (V2 x y) = map (`V2` y) [x..]
   & takeWhile (\p -> maybe False isDigit $ M.lookup p engine)
@@ -85,4 +95,12 @@ day3part1 input = engine
   where engine = parseInput input
 
 day3part2 :: String -> String
-day3part2 _ = ""
+day3part2 input = engine
+  & gearPositions
+  & map (neighboursWithDigits engine)
+  & map (nub . map (digitStart engine))
+  & filter ((== 2) . length)
+  & map (product . map (numberAt engine))
+  & sum
+  & show
+  where engine = parseInput input
