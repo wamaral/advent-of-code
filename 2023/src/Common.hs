@@ -49,6 +49,9 @@ stringToInt s = read <$> parseMaybe parser s
 stringToInt0 :: String -> Int
 stringToInt0 = fromMaybe 0 . stringToInt
 
+concatInts :: [Int] -> Int
+concatInts = stringToInt0 . concatMap show
+
 zipTail :: [a] -> [(a,a)]
 zipTail xs = zip xs (tail xs)
 
@@ -61,7 +64,7 @@ listOfListsToV2Map as = zip [0..] as
   & concatMap (\(y, line) -> map (\(x, a) -> (V2 x y, a)) $ zip [0..] line)
   & M.fromList
 
-interpolate :: (Enum a, Eq a, Ord a) => a -> a -> [a]
+interpolate :: (Enum a, Ord a) => a -> a -> [a]
 interpolate a b
   | a < b = [a..b]
   | a > b = [a,(pred a)..b]
