@@ -27,6 +27,21 @@ input2 = unlines
   , "ZZZ = (ZZZ, ZZZ)"
   ]
 
+-- tr 12 FG
+input3 :: String
+input3 = unlines
+  [ "LR"
+  , ""
+  , "FFA = (FFB, XXX)"
+  , "FFB = (XXX, FFZ)"
+  , "FFZ = (FFB, XXX)"
+  , "GGA = (GGB, XXX)"
+  , "GGB = (GGC, GGC)"
+  , "GGC = (GGZ, GGZ)"
+  , "GGZ = (GGB, GGB)"
+  , "XXX = (XXX, XXX)"
+  ]
+
 spec :: Spec
 spec = do
   describe "part 1" $ do
@@ -35,4 +50,4 @@ spec = do
       day8part1 input2 `shouldBe` "6"
   describe "part 2" $ do
     it "runs provided examples" $ do
-      day8part2 input `shouldBe` ""
+      day8part2 input3 `shouldBe` "6"

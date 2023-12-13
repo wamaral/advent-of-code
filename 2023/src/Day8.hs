@@ -5,6 +5,8 @@ module Day8
   where
 
 import Common
+import Data.Function
+import Data.List (isSuffixOf)
 import qualified Data.Map.Strict as M
 import Data.Maybe
 import Text.Megaparsec
@@ -66,8 +68,21 @@ walk state = do
     , steps = succ $ steps state
     }
 
+runUntilPosition :: (Position -> Bool) -> MapState -> MapState
+runUntilPosition f = head . dropWhile (f . currentPosition) . iterate walk
+
 day8part1 :: String -> String
-day8part1 = show . steps . head . dropWhile ((/= "ZZZ") . currentPosition) . iterate walk . startingState "AAA" . parseInput
+day8part1 input = parseInput input
+  & startingState "AAA"
+  & runUntilPosition (/= "ZZZ")
+  & steps
+  & show
 
 day8part2 :: String -> String
-day8part2 _ = ""
+day8part2 input = initials
+  & map (steps . runUntilPosition (not . isSuffixOf "Z") . (`startingState` parsed))
+  & foldl lcm 1
+  & show
+  where
+    parsed = parseInput input
+    initials = filter (isSuffixOf "A") $ M.keys (pos parsed)
